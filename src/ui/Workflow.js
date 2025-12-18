@@ -80,6 +80,12 @@ export class WorkflowController {
                 <div class="instruction-box">
                     <h2>${step.replace('_', ' ')}</h2>
                     <p id="instruction-text">${instruction}</p>
+                    ${step === 'UPLOAD' ?
+                    `<div style="margin-top:10px;">
+                         <button id="upload-btn">Select File</button>
+                         <input type="file" id="file-input" style="display:none;" accept="image/*">
+                       </div>`
+                    : ''}
                     ${step === 'LEADING_EDGE' || step === 'TRAILING_EDGE' ?
                     `<div class="tool-toggle">
                          <label>Tool:</label>
@@ -103,6 +109,21 @@ export class WorkflowController {
                 select.addEventListener('change', (e) => {
                     this.ic.subMode = e.target.value;
                 });
+            }
+
+            // Re-bind upload button if exists
+            const uploadBtn = document.getElementById('upload-btn');
+            const fileInput = document.getElementById('file-input');
+            if (uploadBtn && fileInput) {
+                uploadBtn.onclick = () => fileInput.click();
+                fileInput.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (file && file.type.startsWith('image/')) {
+                        this.ic.cm.loadImage(file).then(() => {
+                            this.nextStep();
+                        });
+                    }
+                };
             }
         }
     }
