@@ -1,0 +1,200 @@
+:root {
+  --bg-color: #1e1e1e;
+  --grid-color: #333;
+  --text-color: #e0e0e0;
+  --accent-color: #00bcd4;
+  --secondary-accent: #ff4081;
+  --surface-color: rgba(30, 30, 30, 0.9);
+}
+
+* {
+  box-sizing: border-box;
+  user-select: none;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Inter', system-ui, sans-serif;
+  overflow: hidden;
+}
+
+#app {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+#designCanvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+}
+
+#ui-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+}
+
+#toolbar {
+  pointer-events: auto;
+  background: var(--surface-color);
+  backdrop-filter: blur(5px);
+  padding: 10px 20px;
+  border-bottom: 1px solid var(--grid-color);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+h1 {
+  font-size: 1.1rem;
+  margin: 0;
+  font-weight: 600;
+  color: var(--accent-color);
+  letter-spacing: 0.5px;
+}
+
+#status {
+  font-family: 'Roboto Mono', monospace;
+  font-size: 0.85rem;
+  color: #aaa;
+}
+
+#overlay {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  /* Bottom center */
+  padding-bottom: 40px;
+  pointer-events: none;
+}
+
+.instruction-box {
+  pointer-events: auto;
+  background: var(--surface-color);
+  border: 1px solid var(--grid-color);
+  border-radius: 8px;
+  padding: 20px;
+  width: 450px;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.instruction-box h2 {
+  margin-top: 0;
+  font-size: 1rem;
+  color: var(--accent-color);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.instruction-box p {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  color: #ccc;
+  margin-bottom: 15px;
+}
+
+.tool-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 15px;
+  background: rgba(0, 0, 0, 0.2);
+  padding: 10px;
+  border-radius: 4px;
+}
+
+select {
+  background: #333;
+  color: white;
+  border: 1px solid #555;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  outline: none;
+}
+
+.hint {
+  font-size: 0.8rem !important;
+  color: #888 !important;
+  margin: 0 !important;
+  margin-left: 10px !important;
+}
+
+.input-group {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+input[type="number"] {
+  background: #333;
+  border: 1px solid #555;
+  color: white;
+  padding: 8px;
+  border-radius: 4px;
+  font-size: 1rem;
+  width: 120px;
+}
+
+button {
+  background: var(--accent-color);
+  color: #111;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.2s;
+}
+
+button:hover {
+  filter: brightness(1.1);
+}
+
+.result-card {
+  margin-top: 15px;
+  padding: 15px;
+  background: rgba(0, 188, 212, 0.1);
+  border: 1px solid var(--accent-color);
+  border-radius: 4px;
+}
+
+.result-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--accent-color);
+  margin: 10px 0;
+  font-family: 'Roboto Mono', monospace;
+}
+
+.result-detail {
+  font-size: 0.85rem;
+  color: #aaa;
+}
