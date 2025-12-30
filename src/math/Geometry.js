@@ -52,8 +52,32 @@ export const MACCalculator = {
         const MAC_pixels = integral_c_sq / area;
         const Y_mac_pixels = moment_y / area;
 
+        // Find visual Y where local chord ~= MAC
         let visual_Y = Y_mac_pixels;
-        if (maxY < 0) visual_Y = -Y_mac_pixels;
+        let minDiff = Infinity;
+
+        // Search across the span for the chord closest to MAC
+        // We can reuse the integration steps or re-iterate
+        for (let y = minY; y <= maxY; y += dy) {
+            const x_le = this.interpolateX(LE_samples, y);
+            const x_te = this.interpolateX(TE_samples, y);
+            const currentChord = Math.abs(x_te - x_le);
+            const diff = Math.abs(currentChord - MAC_pixels);
+
+            if (diff < minDiff) {
+                minDiff = diff;
+                visual_Y = y;
+            }
+        }
+
+        // If we are on the negative side (left wing) for visualization preference (optional),
+        // we might want to ensure visual_Y matches the centroid's sign or force it positive/negative.
+        // The integration area calculation might cover both wings or one. 
+        // Assuming standard half-span analysis or symmetric full span.
+        // If the user drew a full plane, minY to maxY covers it.
+        // The centroid Y_mac_pixels dictates roughly where the "weight" is.
+        // Let's stick to the found visual_Y, but maybe bias towards the side of the centroid?
+        // Actually, simple minDiff is safer for now.
 
         const X_le_mac_pixels = this.interpolateX(LE_samples, visual_Y);
 
