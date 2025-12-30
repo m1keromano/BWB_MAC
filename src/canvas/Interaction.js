@@ -192,12 +192,52 @@ export class InteractionController {
             this.cm.previewShape = null;
         }
         else if ((e.metaKey || e.ctrlKey) && e.key === 'z') { // Undo Point or Segment?
+            // 1. Check for Active Points (currently drawing segment)
             if (this.cm.activePoints.length > 0) {
                 this.cm.activePoints.pop();
-            } else {
-                // Try to undo last committed segment
-                if (this.mode === 'DRAW_LEADING') this.cm.leadingEdgeSegments.pop();
-                else if (this.mode === 'DRAW_TRAILING') this.cm.trailingEdgeSegments.pop();
+            }
+            // 2. Check for Committed Segments or Symmetry Line in current mode
+            else {
+                let nothingToUndo = false;
+
+                if (this.mode === 'DRAW_LEADING') {
+                    if (this.cm.leadingEdgeSegments.length > 0) {
+                        this.cm.leadingEdgeSegments.pop();
+                    } else {
+                        nothingToUndo = true;
+                    }
+                }
+                else if (this.mode === 'DRAW_TRAILING') {
+                    if (this.cm.trailingEdgeSegments.length > 0) {
+                        this.cm.trailingEdgeSegments.pop();
+                    } else {
+                        nothingToUndo = true;
+                    }
+                }
+                else if (this.mode === 'DRAW_SYMMETRY') {
+                    // Logic: If I am in SYMMETRY mode, and I have a symmetry line, undoing it clears it.
+                    // If I don't have one, I go back.
+                    if (this.cm.symmetryLine) {
+                        this.cm.symmetryLine = null;
+                        this.cm.activePoints = [];
+                    } else {
+                        nothingToUndo = true;
+                    }
+                }
+                else if (this.mode === 'IDLE') {
+                    // For SCALING_RESULTS or UPLOAD, just go back
+                    nothingToUndo = true; // Fall through to prevStep
+                }
+                else {
+                    nothingToUndo = true;
+                }
+
+                // 3. Cross-Phase Undo
+                if (nothingToUndo) {
+                    if (window.app && window.app.workflowController) {
+                        window.app.workflowController.prevStep();
+                    }
+                }
             }
         }
     }

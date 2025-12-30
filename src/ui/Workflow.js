@@ -26,6 +26,13 @@ export class WorkflowController {
         }
     }
 
+    prevStep() {
+        if (this.currentStepIndex > 0) {
+            this.currentStepIndex--;
+            this.enterStep(this.currentStepIndex);
+        }
+    }
+
     enterStep(index) {
         const step = this.steps[index];
         console.log(`Entering step: ${step}`);
